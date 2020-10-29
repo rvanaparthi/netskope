@@ -68,12 +68,12 @@ $customerId = "$env:workspaceId"
 Write-Output $customerId  
 $sharedKey =  "$env:workspacekey"
 Write-Output = $sharedkey
-$apikey = "$env.apikey"
+$apikey = "$env:apikey"
 Write-Output $apikey
 $LogType = "$env:Tablename"
 Write-Output $LogType
-$timeperiod = "$env.timeperiod"
-$URL = "$env.uri"
+$timeperiod = "$env:timeperiod"
+$URL = "$env:uri"
 Write-Output $URL
 $netscopealerts = Invoke-RestMethod $URL -Method 'GET' -Headers $headers -Body $body -ErrorVariable RestError
 Write-Output $netscopealerts.data.activity
