@@ -66,7 +66,7 @@ function netskope ()
 {
 $customerId = "$env:workspaceId"
 Write-Output $customerId  
-$sharedKey =  "$env:workspacekey"
+$sharedKey = "$env:workspacekey"
 Write-Output = $sharedkey
 $apikey = "$env:apikey"
 Write-Output $apikey
