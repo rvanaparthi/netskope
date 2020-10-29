@@ -76,7 +76,7 @@ $timeperiod = "$env:timeperiod"
 $URL = "$env:uri"
 Write-Output $URL
 $netscopealerts = Invoke-RestMethod $URL -Method 'GET' -Headers $headers -Body $body -ErrorVariable RestError
-Write-Output $netscopealerts.data.activity
+Write-Output $netscopealerts
  
  if ($RestError )
    {
