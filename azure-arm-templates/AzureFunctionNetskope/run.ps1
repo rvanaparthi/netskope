@@ -70,7 +70,7 @@ $sharedKey =  "$env:workspacekey"
 Write-Output = $sharedkey
 $apikey = "$env:apikey"
 Write-Output $apikey
-$LogType = "$env:Tablename"
+$LogType = "$env:tablename"
 Write-Output $LogType
 $timeperiod = "$env:timeperiod"
 $URL = "$env:uri"
