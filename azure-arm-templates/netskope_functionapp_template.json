@@ -3,24 +3,24 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "FunctionName": {
-            "defaultValue": "netskopeIngestionLatest",
+            "defaultValue": "netskopeIngestion",
             "type": "string"
         },
         "WorkspaceId": {
             "type": "string",
-            "defaultValue": "238d9ad3-963d-40b2-a6bf-03d10cf76911"
+            "defaultValue": "< WorkspaceId >"
         },
         "Workspacekey": {
             "type": "string",
-            "defaultValue": "zTPsdTnJtCP1pgbPXHLsF8qdag4DBECe6DijESGIvVr+d3T7sVDGErrGc7OKLPpI60eoRVqIPIB8bIwrMwAzkA=="
+            "defaultValue": "< WorkspaceKey >"
         },
         "APIKey": {
             "type": "string",
-            "defaultValue": "fc125d8ce516120784d8851dbb300497"
+            "defaultValue": "< Apikey >"
         },
         "TableName": {
             "type": "string",
-            "defaultValue": "Neskope"
+            "defaultValue": "< Neskope >"
         },
         "TimePeriod": {
             "type": "string",
@@ -28,7 +28,7 @@
         },
         "Uri": {
             "type": "string",
-            "defaultValue": "https://innovatechcloud.goskope.com"
+            "defaultValue": "https://<API URL>"
         },
         "TypeOfOperation": {
             "type": "string",
