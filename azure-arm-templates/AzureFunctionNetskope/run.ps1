@@ -89,17 +89,15 @@ elseif ($typeofoperation -eq "pageevents")
 }
 else { 
 
-  $Url = "$uri/api/v1/events?token=$apikey&type=alerts?token=$apikey"
+  $Url = "env.$uri/api/v1/events?alerts=$apikey?token=$apikey&timeperiod=$timeperiod"
   Write-Output $Url
 }
 
 
 
-
-
 $netscopealerts = Invoke-RestMethod $URL -Method 'GET' -Headers $headers -Body $body -ErrorVariable RestError
   
- if ($RestError )
+if ($RestError )
    {
    Write-Output "Error Please check the API request"
    }
