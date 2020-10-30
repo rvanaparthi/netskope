@@ -75,7 +75,7 @@ $LogType = $env:tablename
 $timeperiod = $env:timeperiod
 $uri = "$env:uri"
 $netscopealerts = @()
-$apitypes = @("page","application","audit","infrastructure","network", "alert")
+$apitypes = @("alert","page","application","audit","infrastructure","network")
     
     
      foreach($type in $apitypes){   
@@ -237,7 +237,6 @@ if (-not ($netscopealerts -eq $null))
      }
       Write-Output $eventobjs
         $jsonPayload = $eventobjs | ConvertTo-Json
-        Write-Output $jsonPayload
         $mbyte = ([System.Text.Encoding]::UTF8.GetBytes($jsonPayload)).Count/1024/1024  
          # if the detections object has payload Less than 30MB will POST the payload.
             if (($mbytes -le 30)){                                
