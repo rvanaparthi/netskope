@@ -73,53 +73,55 @@ $sharedKey = $env:workspacekey
 $apikey = $env:apikey
 $LogType = $env:tablename
 $timeperiod = $env:timeperiod
-$typeofoperation = $env:typeofoperation
 $uri = "$env:uri"
 $netscopealerts = @()
+$apitypes = @("page","application","audit","infrastructure","network", "alert")
+    
+    
+     foreach($type in $apitypes){   
+            if("$type" -eq "alert") 
+            { 
 
-if ("$typeofoperation" -eq "events" ) 
-{
-    $apitypes = @("page","application","audit","infrastructure","network")
-    foreach($type in $apitypes){   
+                       $Url = "$uri/api/v1/alerts?token=$apikey&timeperiod=$timeperiod"
+                       Write-Output $Url
+                       $alerts = Invoke-RestMethod $URL -Method 'GET' -Headers $headers -Body $body -ErrorVariable RestError
+                       if ($RestError )
+                       {
+                            Write-Output "Error Please check the API request"
+                       }
+                       elseif([string]::IsNullOrWhiteSpace($alerts.data.type))
+                       {
+                            Write-Output "$type event type Data is Empty on Request"
+                       }
+                       else
+                       {
+                            Write-Output " event $type data is available"
+                            $netscopealerts += $alerts.data     
+                       }
+                                            
+            } 
+            else {
             
-            $Url = "$uri/api/v1/events?token=$apikey&type=$type&timeperiod=$timeperiod"
+                     $Url = "$uri/api/v1/events?token=$apikey&type=$type&timeperiod=$timeperiod"
             
-              $events = Invoke-RestMethod $URL -Method 'GET' -Headers $headers -Body $body -ErrorVariable RestError
-              if ($RestError )
-               {
-                  Write-Output "Error Please check the API request"
-               }
-              elseif([string]::IsNullOrWhiteSpace($events.data.type))
-               {
-                  Write-Output  "$type event type Data is Empty on Request"
-               }
-              else
-               {
-                     $netscopealerts += $events.data     
-               }
-        }
+                     $events = Invoke-RestMethod $URL -Method 'GET' -Headers $headers -Body $body -ErrorVariable RestError
+                      if ($RestError )
+                       {
+                          Write-Output "Error Please check the API request"
+                       }
+                      elseif([string]::IsNullOrWhiteSpace($events.data.type))
+                       {
+                          Write-Output "$type event type Data is Empty on Request"
+                       }
+                      else
+                       {
+                          Write-Output " event $type data is available"
+                          $netscopealerts += $events.data     
+                       }
+                    }
  
-}
+           }
 
-
-if("$typeofoperation" -eq "alerts") 
-{ 
-
-           $Url = "$uri/api/v1/alerts?token=$apikey&timeperiod=$timeperiod"
-           $alerts = Invoke-RestMethod $URL -Method 'GET' -Headers $headers -Body $body -ErrorVariable RestError
-             if ($RestError )
-               {
-                  Write-Output "Error Please check the API request"
-               }
-              elseif([string]::IsNullOrWhiteSpace($alerts.data.type))
-               {
-                  Write-Output  " alerts type Data is Empty on Request"
-               }
-              else
-               {
-                     $netscopealerts += $alerts.data
-               }
-}
 
 if (-not ($netscopealerts -eq $null))
 {
