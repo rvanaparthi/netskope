@@ -73,11 +73,32 @@ Write-Output $apikey
 $LogType = $env:tablename
 Write-Output $LogType
 $timeperiod = $env:timeperiod
-$URL = $env:uri
-Write-Output $URL
+Write-Output $timeperiod
+
+
+if ($typeofoperation -eq "applicationevents" ) 
+{
+    $Url = "env.$uri/api/v1/events?token=$apikey&type=application&timeperiod=$timeperiod"
+    Write-Output $Url
+}
+elseif ($typeofoperation -eq "pageevents") 
+{ 
+
+   $Url = "env.$uri/api/v1/events?token=$apikey&type=page&timeperiod=$timeperiod"
+   Write-Output $Url
+}
+else { 
+
+  $Url = "$uri/api/v1/events?token=$apikey&type=alerts?token=$apikey"
+  Write-Output $Url
+}
+
+
+
+
+
 $netscopealerts = Invoke-RestMethod $URL -Method 'GET' -Headers $headers -Body $body -ErrorVariable RestError
-Write-Output $netscopealerts
- 
+  
  if ($RestError )
    {
    Write-Output "Error Please check the API request"
