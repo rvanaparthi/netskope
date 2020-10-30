@@ -85,7 +85,7 @@ elseif ($typeofoperation -eq "pageevents")
 }
 else { 
 
-  $Url = "$uri/api/v1/events?alerts?token=$apikey&timeperiod=$timeperiod"
+  $Url = "$uri/api/v1/alerts?token=$apikey&timeperiod=$timeperiod"
   Write-Output $Url
 }
 
