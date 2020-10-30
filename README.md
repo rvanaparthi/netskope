@@ -1,6 +1,6 @@
 # Netskope Events & Alerts
 
-Repository is for CarbonBlackDefence Deployment using Arm Templates
+Repository is for Netskope ARM Deployment.
 
 
 #### 1: Deploy via Azure ARM Template #####
