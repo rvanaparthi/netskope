@@ -77,20 +77,21 @@ Write-Output $timeperiod
 $typeofoperation = $env:typeofoperation
 Write-Output $typeofoperation
 
+
 if ($typeofoperation -eq "applicationevents" ) 
 {
-    $Url = "env.$uri/api/v1/events?token=$apikey&type=application&timeperiod=$timeperiod"
+    $Url = "env:$uri/api/v1/events?token=$apikey&type=application&timeperiod=$timeperiod"
     Write-Output $Url
 }
 elseif ($typeofoperation -eq "pageevents") 
 { 
 
-   $Url = "env.$uri/api/v1/events?token=$apikey&type=page&timeperiod=$timeperiod"
+   $Url = "env:$uri/api/v1/events?token=$apikey&type=page&timeperiod=$timeperiod"
    Write-Output $Url
 }
 else { 
 
-  $Url = "env.$uri/api/v1/events?alerts=$apikey?token=$apikey&timeperiod=$timeperiod"
+  $Url = "env:$uri/api/v1/events?alerts=$apikey?token=$apikey&timeperiod=$timeperiod"
   Write-Output $Url
 }
 
