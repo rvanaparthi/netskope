@@ -74,7 +74,7 @@ $LogType = $env:tablename
 Write-Output $LogType
 $timeperiod = $env:timeperiod
 Write-Output $timeperiod
-$typeofoperation = $env.typeofoperation
+$typeofoperation = $env:typeofoperation
 Write-Output $typeofoperation
 
 if ($typeofoperation -eq "applicationevents" ) 
