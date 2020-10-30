@@ -29,17 +29,11 @@
         "Uri": {
             "type": "string",
             "defaultValue": "https://<API URL>"
-        },
-        "TypeOfOperation": {
-            "type": "string",
-            "allowedValues": [
-                "alerts",
-                "applicationevents",
-                "pageevents"
-            ]
         }
     },
-    "variables": {},
+    "variables": {
+        "FunctionName": "[concat(toLower(parameters('FunctionName')), uniqueString(resourceGroup().id))]"
+     },
     "resources": [
         {
             "type": "Microsoft.Insights/components",
@@ -182,8 +176,8 @@
                         "uri": "[parameters('Uri')]",
                         "tablename": "[parameters('TableName')]",
                         "timeperiod": "[parameters('TimePeriod')]",
-                        "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/rvanaparthi/netskope/blob/main/azure-arm-templates/AzureFunctionNetskope.zip?raw=true",
-						"typeofoperation": "[parameters('TypeOfOperation')]"
+                        "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/rvanaparthi/netskope/blob/main/azure-arm-templates/AzureFunctionNetskope.zip?raw=true"
+						
                     }
                 }
             ]
