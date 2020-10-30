@@ -10,6 +10,8 @@ if ($Timer.IsPastDue) {
 }
 
 
+# Function to convery Html to text
+
 function Html-ToText {
  param([System.String] $html)
 
@@ -62,6 +64,8 @@ function Html-ToText {
 }
 
 
+# Function for alerts and events from netskop apis 
+
 function netskope ()
 {
 $customerId = $env:workspaceId
@@ -71,41 +75,58 @@ $LogType = $env:tablename
 $timeperiod = $env:timeperiod
 $typeofoperation = $env:typeofoperation
 $uri = "$env:uri"
+$netscopealerts = @()
 
-if ($typeofoperation -eq "applicationevents" ) 
+if ("$typeofoperation" -eq "events" ) 
 {
-    $Url = "$uri/api/v1/events?token=$apikey&type=application&timeperiod=$timeperiod"
-    Write-Output $Url
+    $apitypes = @("page","application","audit","infrastructure","network")
+    foreach($type in $apitypes){   
+            
+            $Url = "$uri/api/v1/events?token=$apikey&type=$type&timeperiod=$timeperiod"
+            
+              $events = Invoke-RestMethod $URL -Method 'GET' -Headers $headers -Body $body -ErrorVariable RestError
+              if ($RestError )
+               {
+                  Write-Output "Error Please check the API request"
+               }
+              elseif([string]::IsNullOrWhiteSpace($events.data.type))
+               {
+                  Write-Output  "$type event type Data is Empty on Request"
+               }
+              else
+               {
+                     $netscopealerts += $events.data     
+               }
+        }
+ 
 }
-elseif ($typeofoperation -eq "pageevents") 
+
+
+if("$typeofoperation" -eq "alerts") 
 { 
 
-   $Url = "$uri/api/v1/events?token=$apikey&type=page&timeperiod=$timeperiod"
-   Write-Output $Url
+           $Url = "$uri/api/v1/alerts?token=$apikey&timeperiod=$timeperiod"
+           $alerts = Invoke-RestMethod $URL -Method 'GET' -Headers $headers -Body $body -ErrorVariable RestError
+             if ($RestError )
+               {
+                  Write-Output "Error Please check the API request"
+               }
+              elseif([string]::IsNullOrWhiteSpace($alerts.data.type))
+               {
+                  Write-Output  " alerts type Data is Empty on Request"
+               }
+              else
+               {
+                     $netscopealerts += $alerts.data
+               }
 }
-else { 
 
-  $Url = "$uri/api/v1/alerts?token=$apikey&timeperiod=$timeperiod"
-  Write-Output $Url
-}
-
-
-
-$netscopealerts = Invoke-RestMethod $URL -Method 'GET' -Headers $headers -Body $body -ErrorVariable RestError
-  
-if ($RestError )
-   {
-   Write-Output "Error Please check the API request"
-   }
-elseif([string]::IsNullOrWhiteSpace($netscopealerts.data.activity))
-   {
-   Write-Output  'Data is Empty on Request'
-   }
-else
-   {
+if (-not ($netscopealerts -eq $null))
+{
+       
         Write-Output 'Loading Data to Log Analytics'
-        $events = $netscopealerts.data
-        $events | ForEach-Object {
+        $event = $netscopealerts
+        $event | ForEach-Object {
         $eventobjs = New-Object -TypeName PSObject
         if ($_._id) { Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "Id" -Value $_._id}
         if ($_.activity) { Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "Activity" -Value $_.Activity}
@@ -136,7 +157,6 @@ else
         if ($_.hostname) {Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "DvcHostname" -Value $_.hostname}
         if ($_.managementID) {Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "ManagedId" -Value $_.managementID}
         if ($_.managed_app) {Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "ManagedApp" -Value $_.managed_app}
-        if ($_.object) {Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "Object" -Value $_.object}
         if ($_.os) {Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "SrcOs" -Value $_.os}
         if ($_.os_version) {Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "OsVersion" -Value $_.os_version}
         if ($_.object_type) {Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "ObjectType" -Value $_.object_type}
@@ -144,7 +164,6 @@ else
         if ($_.page_id) {Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "PageId" -Value $_.page_id}
         if ($_.page) {Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "Page" -Value $_.page}
         if ($_.page_site) {Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "PageSite" -Value $_.page_site}
-        if ($_.policy) {Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "Policy" -Value $_.policy}
         if ($_.referer) {Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "Referer" -Value $_.referer}                     
         if ($_.site) {Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "Site" -Value $_.site}                            
         if ($_.src_time) {Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "SrcTime" -Value $_.src_time}                                                           
@@ -175,7 +194,6 @@ else
         if ($_.account_name) { Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "AccountName" -Value $_.account_name}
         if ($_.account_id) { Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "AccountId" -Value $_.account_id}
         if ($_.resource_category) { Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "ResourceCategory" -Value $_.resource_category}
-        if ($_.sa_rule_severity) { Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "SaRuleSeverity" -Value $_.sa_rule_severity}
         if ($_.sa_rule_severity) { Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "SaRuleSeverity" -Value $_.sa_rule_severity}
         if ($_.sa_rule_id) { Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "SaRuleId" -Value $_.sa_rule_id}
         if ($_.sa_rule_name) { Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "SaRuleName" -Value $_.sa_rule_name}
@@ -208,9 +226,14 @@ else
             $customobject = New-Object -TypeName PSObject
             Add-Member -InputObject $customobject -MemberType NoteProperty -Name "Name" -Value $asset.name
             Add-Member -InputObject $customobject -MemberType NoteProperty -Name "Value" -Value $asset.value
-            $assets += $customobject            
+            Write-Output "$type"
+            $assets += $customobject        
         }
-        if ($assets){ Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "IaasAssetTags" -Value $assets }
+        if ($assets){ Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "IaasAssetTags" -Value $assets }    
+       
+        }
+     }
+      Write-Output $eventobjs
         $jsonPayload = $eventobjs | ConvertTo-Json
         Write-Output $jsonPayload
         $mbyte = ([System.Text.Encoding]::UTF8.GetBytes($jsonPayload)).Count/1024/1024  
@@ -223,22 +246,17 @@ else
                     $LOGGED += $mbyte
                     Write-Host "SUCCESS: Log Analytics POST, Status Code: $responseCode.Loaded succefully.Logged"
                 }
-                
+               
             }
             else {
                    Write-Host "NOT SUCCESS: Log Analytics POST failed as the PayLoad is more than 30Mb: $mbyte"
 
             } 
             
-          }
-
-        }
-     } 
+          } 
    }
-   
 }
  
-
 
 # Create the function to create the authorization signature
 function Build-Signature ($customerId, $sharedKey, $date, $contentLength, $method, $contentType, $resource)
@@ -276,16 +294,14 @@ function Post-LogAnalyticsData($customerId, $sharedKey, $body, $logType)
     return $response.StatusCode
 }
 
-
-
 # Execute the Function to Pull Netskope events data and Post to the Log Analytics Workspace
 
 netskope
 
 
 
+
+
+
 # Write an information log with the current time.
 Write-Host "PowerShell timer trigger function ran! TIME: $currentUTCtime"
-
-
-
