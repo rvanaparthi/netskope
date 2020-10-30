@@ -65,19 +65,12 @@ function Html-ToText {
 function netskope ()
 {
 $customerId = $env:workspaceId
-Write-Output $customerId  
 $sharedKey = $env:workspacekey
-Write-Output = $sharedkey
 $apikey = $env:apikey
-Write-Output $apikey
 $LogType = $env:tablename
-Write-Output $LogType
 $timeperiod = $env:timeperiod
-Write-Output $timeperiod
 $typeofoperation = $env:typeofoperation
-Write-Output $typeofoperation
 $uri = "$env:uri"
-Write-Output $uri
 
 if ($typeofoperation -eq "applicationevents" ) 
 {
@@ -112,7 +105,6 @@ else
    {
         Write-Output 'Loading Data to Log Analytics'
         $events = $netscopealerts.data
-        Write-Output $events
         $events | ForEach-Object {
         $eventobjs = New-Object -TypeName PSObject
         if ($_._id) { Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "Id" -Value $_._id}
