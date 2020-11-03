@@ -74,7 +74,7 @@ $apikey = $env:apikey
 $LogType = $env:tablename
 $timeperiod = $env:timeperiod
 $uri = "$env:uri"
-$netscopealerts = @()
+$netskopeevents = @()
 $apitypes = @("alert","page","application","audit","infrastructure","network")
     
     
@@ -96,7 +96,7 @@ $apitypes = @("alert","page","application","audit","infrastructure","network")
                        else
                        {
                             Write-Output " event $type data is available"
-                            $netscopealerts += $alerts.data     
+                            $netskopeevents += $alerts.data     
                        }
                                             
             } 
@@ -116,18 +116,18 @@ $apitypes = @("alert","page","application","audit","infrastructure","network")
                       else
                        {
                           Write-Output " event $type data is available"
-                          $netscopealerts += $events.data     
+                          $netskopeevents += $events.data     
                        }
                     }
  
            }
 
 
-if (-not ($netscopealerts -eq $null))
+if (-not ($netskopeevents -eq $null))
 {
        
         Write-Output 'Loading Data to Log Analytics'
-        $event = $netscopealerts
+        $event = $netskopeevents
         $event | ForEach-Object {
         $eventobjs = New-Object -TypeName PSObject
         if ($_._id) { Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "Id" -Value $_._id}
