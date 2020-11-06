@@ -68,12 +68,20 @@ function Html-ToText {
 
 function netskope ()
 {
+
+
 $customerId = $env:workspaceId
 $sharedKey = $env:workspacekey
 $apikey = $env:apikey
 $LogType = $env:tablename
 $timeperiod = $env:timeperiod
 $uri = "$env:uri"
+$TIME = (Get-Date -Date ((Get-Date).DateTime) -UFormat %s)
+$QUERY_OFFSET = 300
+$TIMEPERIOD = 86400 
+$ENDTIME = $TIME - $QUERY_OFFSET
+$STARTTIME = $ENDTIME - $TIMPERIOD
+
 $netskopeevents = @()
 $apitypes = @("alert","page","application","audit","infrastructure","network")
     
@@ -82,7 +90,7 @@ $apitypes = @("alert","page","application","audit","infrastructure","network")
             if("$type" -eq "alert") 
             { 
 
-                       $Url = "$uri/api/v1/alerts?token=$apikey&timeperiod=$timeperiod"
+                       $Url = "$uri/api/v1/alerts?token=$apikey&starttime=$STARTTIME&endtime=$ENDTIME"
                        Write-Output $Url
                        $alerts = Invoke-RestMethod $URL -Method 'GET' -Headers $headers -Body $body -ErrorVariable RestError
                        if ($RestError )
@@ -102,8 +110,8 @@ $apitypes = @("alert","page","application","audit","infrastructure","network")
             } 
             else {
             
-                     $Url = "$uri/api/v1/events?token=$apikey&type=$type&timeperiod=$timeperiod"
-            
+                     $Url = "$uri/api/v1/events?token=$apikey&type=$type&starttime=$STARTTIME&endtime=$ENDTIME"
+                     Write-Output $url
                      $events = Invoke-RestMethod $URL -Method 'GET' -Headers $headers -Body $body -ErrorVariable RestError
                       if ($RestError )
                        {
@@ -123,7 +131,7 @@ $apitypes = @("alert","page","application","audit","infrastructure","network")
            }
 
 
-if (-not ($netskopeevents -eq $null))
+if ( $netskopeevents -ne $null  -and  $netskopeevents.type -ne $null)
 {
        
         Write-Output 'Loading Data to Log Analytics'
@@ -228,7 +236,6 @@ if (-not ($netskopeevents -eq $null))
             $customobject = New-Object -TypeName PSObject
             Add-Member -InputObject $customobject -MemberType NoteProperty -Name "Name" -Value $asset.name
             Add-Member -InputObject $customobject -MemberType NoteProperty -Name "Value" -Value $asset.value
-            Write-Output "$type"
             $assets += $customobject        
         }
         if ($assets){ Add-Member -InputObject $eventobjs -MemberType NoteProperty -Name "IaasAssetTags" -Value $assets }    
