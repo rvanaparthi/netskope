@@ -73,13 +73,13 @@ function netskope ()
 $customerId = $env:workspaceId
 $sharedKey = $env:workspacekey
 $apikey = $env:apikey
-$LogType = $env:tablename
-$uri = "$env:uri"
-$TIME = (Get-Date -Date ((Get-Date).DateTime) -UFormat %s)
+$LogType = "NetskopeEdit"
+$uri = $env:uri
+$ENDTIME = (Get-Date -Date ((Get-Date).DateTime) -UFormat %s)
 $QUERY_OFFSET = 300
 $TIMEPERIOD = 86400 
-$ENDTIME = $TIME - $QUERY_OFFSET
-$STARTTIME = $ENDTIME - $TIMPERIOD
+$STARTTIME = $ENDTIME - $QUERY_OFFSET
+
 
 $netskopeevents = @()
 $apitypes = @("alert","page","application","audit","infrastructure","network")
@@ -241,7 +241,6 @@ if ( $netskopeevents -ne $null  -and  $netskopeevents.type -ne $null)
        
         }
      }
-      Write-Output $eventobjs
         $jsonPayload = $eventobjs | ConvertTo-Json
         $mbyte = ([System.Text.Encoding]::UTF8.GetBytes($jsonPayload)).Count/1024/1024  
          # if the detections object has payload Less than 30MB will POST the payload.
