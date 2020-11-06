@@ -74,7 +74,6 @@ $customerId = $env:workspaceId
 $sharedKey = $env:workspacekey
 $apikey = $env:apikey
 $LogType = $env:tablename
-$timeperiod = $env:timeperiod
 $uri = "$env:uri"
 $TIME = (Get-Date -Date ((Get-Date).DateTime) -UFormat %s)
 $QUERY_OFFSET = 300
