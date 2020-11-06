@@ -72,7 +72,7 @@ function netskope ()
 $customerId = $env:workspaceId
 $sharedKey = $env:workspacekey
 $apikey = $env:apikey
-$LogType = "NetskopeEdit"
+$LogType = $env:tablename
 $uri = $env:uri
 $ENDTIME = (Get-Date -Date ((Get-Date).DateTime) -UFormat %s)
 $QUERY_OFFSET = 86400
