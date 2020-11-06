@@ -22,10 +22,6 @@
             "type": "string",
             "defaultValue": "< Neskope >"
         },
-        "TimePeriod": {
-            "type": "string",
-            "defaultValue": "3600"
-        },
         "Uri": {
             "type": "string",
             "defaultValue": "https://<API URL>"
@@ -175,7 +171,6 @@
                         "apikey": "[parameters('APIKey')]",
                         "uri": "[parameters('Uri')]",
                         "tablename": "[parameters('TableName')]",
-                        "timeperiod": "[parameters('TimePeriod')]",
                         "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/rvanaparthi/netskope/blob/main/azure-arm-templates/AzureFunctionNetskope.zip?raw=true"
 						
                     }
