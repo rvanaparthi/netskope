@@ -69,18 +69,15 @@ function Html-ToText {
 function netskope ()
 {
 
-
 $customerId = $env:workspaceId
 $sharedKey = $env:workspacekey
 $apikey = $env:apikey
 $LogType = "NetskopeEdit"
 $uri = $env:uri
 $ENDTIME = (Get-Date -Date ((Get-Date).DateTime) -UFormat %s)
-$QUERY_OFFSET = 300
+$QUERY_OFFSET = 86400
 $TIMEPERIOD = 86400 
 $STARTTIME = $ENDTIME - $QUERY_OFFSET
-
-
 $netskopeevents = @()
 $apitypes = @("alert","page","application","audit","infrastructure","network")
     
@@ -132,7 +129,7 @@ $apitypes = @("alert","page","application","audit","infrastructure","network")
 
 if ( $netskopeevents -ne $null  -and  $netskopeevents.type -ne $null)
 {
-       
+        Write-Output $netskopeevents.type
         Write-Output 'Loading Data to Log Analytics'
         $event = $netskopeevents
         $event | ForEach-Object {
@@ -242,6 +239,10 @@ if ( $netskopeevents -ne $null  -and  $netskopeevents.type -ne $null)
         }
      }
         $jsonPayload = $eventobjs | ConvertTo-Json
+         
+            
+          } 
+
         $mbyte = ([System.Text.Encoding]::UTF8.GetBytes($jsonPayload)).Count/1024/1024  
          # if the detections object has payload Less than 30MB will POST the payload.
             if (($mbytes -le 30)){                                
@@ -257,9 +258,7 @@ if ( $netskopeevents -ne $null  -and  $netskopeevents.type -ne $null)
             else {
                    Write-Host "NOT SUCCESS: Log Analytics POST failed as the PayLoad is more than 30Mb: $mbyte"
 
-            } 
-            
-          } 
+            }
    }
 }
  
