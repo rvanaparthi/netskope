@@ -3,28 +3,32 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "FunctionName": {
-            "defaultValue": "netskope",
+            "defaultValue": "Netskope",
             "type": "string"
         },
         "WorkspaceId": {
             "type": "string",
-            "defaultValue": "< WorkspaceId >"
+            "defaultValue": "<WorkspaceId>"
         },
         "Workspacekey": {
             "type": "string",
-            "defaultValue": "< WorkspaceKey >"
+            "defaultValue": "<WorkspaceKey>"
         },
         "APIKey": {
             "type": "string",
-            "defaultValue": "< Apikey >"
+            "defaultValue": "<API Key>"
         },
-        "TableName": {
+        "TimeInterval": {
             "type": "string",
-            "defaultValue": "< Neskope >"
+            "defaultValue": "5"
         },
         "Uri": {
             "type": "string",
-            "defaultValue": "https://<API URL>"
+            "defaultValue": "https://<Tenant Name>.goskope.com"
+        },
+        "LogTypes": {
+            "type": "string",
+            "defaultValue": "alert,page,application,audit,infrastructure,network"
         }
     },
     "variables": {
@@ -167,10 +171,11 @@
                         "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING": "[concat('DefaultEndpointsProtocol=https;AccountName=', toLower(variables('FunctionName')),';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', toLower(variables('FunctionName'))), '2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]",
                         "WEBSITE_CONTENTSHARE": "[toLower(variables('FunctionName'))]",
                         "workspaceId": "[parameters('WorkspaceId')]",
-                        "workspacekey": "[parameters('Workspacekey')]",
+                        "workspaceKey": "[parameters('Workspacekey')]",
                         "apikey": "[parameters('APIKey')]",
                         "uri": "[parameters('Uri')]",
-                        "tablename": "[parameters('TableName')]",
+                        "timeInterval": "[parameters('TimeInterval')]",
+                        "logTypes": "[parameters('LogTypes')]",
                         "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/rvanaparthi/netskope/blob/main/azure-arm-templates/AzureFunctionNetskope.zip?raw=true"
 						
                     }
